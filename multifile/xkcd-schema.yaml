@@ -1,0 +1,44 @@
+definitions:
+  User:
+    type: object
+    properties:
+      firstName:
+        type: string
+        maxLength: 100
+        pattern: /^abc$/
+        example: 24342
+      lastName:
+        type: string
+        maxLength: 100
+        pattern: /^[\w\s]+$/
+        example: Doe
+      fullName:
+        type: string
+        maxLength: 100
+        pattern: /^[\w\s]+$/
+        example: John Doe
+  comic:
+    properties:
+      alt:
+        type: string
+      day:
+        type: string
+      img:
+        type: string
+      link:
+        type: string
+      month:
+        type: string
+      news:
+        type: string
+      num:
+        type: number
+      safe_title:
+        type: string
+      title:
+        type: string
+      transcript:
+        type: string
+      year:
+        type: string
+    type: object

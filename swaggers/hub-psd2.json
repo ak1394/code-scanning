@@ -1,0 +1,2438 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "API de Redsys para PSD2",
+    "version": "1.0.0",
+    "title": "Inicio de Pagos",
+    "x-ibm-name": "api-dc50c",
+    "contact": {
+      "name": "Soporte PSD2",
+      "email": "psd2.soporte@redsys.es"
+    },
+    "x-ibm-languages": {
+      "title": {
+        "en": "HUB-PSD2"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "PSD2",
+      "description": "Endpoints disponibles para el hub PSD2"
+    }
+  ],
+  "definitions": {
+    "AccountReference": {
+      "type": "object",
+      "properties": {
+        "iban": {
+          "properties": [],
+          "type": "string",
+          "example": "ES2640000418401234567599",
+          "description": "IBAN de la cuenta"
+        },
+        "bban": {
+          "properties": [],
+          "type": "string",
+          "description": "BBAN de la cuenta, cuando esta no tiene IBAN.",
+          "example": "20385778983000760236"
+        },
+        "pan": {
+          "properties": [],
+          "type": "string",
+          "description": "Primary Account Number de la tarjeta. Puede ser tokenizada por el ASPSP para cumplir los requerimientos de PCI DSS.",
+          "example": "1234567891234567"
+        },
+        "maskedPan": {
+          "properties": [],
+          "type": "string",
+          "description": "Primary Account Number de la tarjeta en forma enmascarda.",
+          "example": "123456******4567"
+        },
+        "msisdn": {
+          "properties": [],
+          "type": "string",
+          "description": "Alias para acceder a una cuenta de pago a través de un número de teléfono móvil registrado.",
+          "example": "27821234567"
+        },
+        "currency": {
+          "properties": [],
+          "type": "string",
+          "example": "EUR",
+          "description": "Moneda"
+        }
+      }
+    },
+    "Address": {
+      "type": "object",
+      "properties": {
+        "street": {
+          "type": "string",
+          "description": "Calle",
+          "example": "Ejemplo de Calle"
+        },
+        "buildingNumber": {
+          "type": "string",
+          "description": "Numero",
+          "example": "5"
+        },
+        "city": {
+          "type": "string",
+          "description": "Ciudad",
+          "example": "Cordoba"
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "Codigo Postal",
+          "example": "14100"
+        },
+        "country": {
+          "type": "string",
+          "description": "Pais",
+          "example": "ES"
+        }
+      }
+    },
+    "Amount": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "description": "Moneda del importe",
+          "example": "EUR"
+        },
+        "amount": {
+          "type": "string",
+          "description": "Cantidad del importe",
+          "example": "500.00"
+        }
+      }
+    },
+    "RequestCrearBulk": {
+      "type": "object",
+      "properties": {
+        "batchBookingPreferred": {
+          "type": "boolean",
+          "description": "Si este elemento es true, el PSU prefiere solo una anotación. Si este elemento es igual a false, el PSU prefiere anotaciones individuales de todas las transacciones individuales contenidas. El ASPSP seguirá esta preferencia de acuerdo al contrato con el PSU.",
+          "example": "true"
+        },
+        "debtorAccount": {
+          "$ref": "#/definitions/AccountReference",
+          "description": "Cuenta del ordenante."
+        },
+        "payments": {
+          "items": {
+            "$ref": "#/definitions/SinglePaymentBulk"
+          },
+          "description": "Este elemento es un array de inicios de pago en notación JSON para los productos de pago soportados. Excluyendo los datos: • debtorAccount • requestedExecutionDate • requestedExecutionTime",
+          "$ref": "#/definitions/ListSinglePaymentBulk"
+        }
+      }
+    },
+    "SinglePayment": {
+      "type": "object",
+      "properties": {
+        "instructedAmount": {
+          "$ref": "#/definitions/Amount",
+          "description": "Información de la transferencia realizada."
+        },
+        "creditorName": {
+          "type": "string",
+          "description": "Nombre del beneficiario",
+          "example": "Nombre"
+        },
+        "creditorAccount": {
+          "$ref": "#/definitions/AccountReference",
+          "description": "Cuenta del ordenante. Nota: este campo puede ser opcional en algunos servicios como pagos bulk"
+        },
+        "creditorAgent": {
+          "type": "string",
+          "description": "BIC de la cuenta del beneficiario",
+          "example": "XXXLESMMXXX"
+        },
+        "creditorAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Direccion Beneficiario"
+        },
+        "remittanceInformationUnstructured": {
+          "type": "string",
+          "description": "Informacion Adicional",
+          "example": "Informacion adicional"
+        },
+        "chargeBearer": {
+          "type": "string",
+          "description": "Valores permitidos: Valores permitidos: • DEBT • CRED • SHAR • SLEV",
+          "example": "SLEV"
+        },
+        "debtorAccount": {
+          "properties": [],
+          "$ref": "#/definitions/AccountReference",
+          "description": "Cuenta del ordenante. Nota: este campo puede ser opcional en algunos servicios como pagos bulk"
+        }
+      }
+    },
+    "AccountAccess": {
+      "type": "object",
+      "properties": {
+        "accounts": {
+          "items": {
+            "$ref": "#/definitions/AccountReference"
+          },
+          "$ref": "#/definitions/ListAccountReference",
+          "description": "Indica las cuentas sobre las que pedir información detallada. Si la lista está vacía, el TPP está solicitando todas las cuentas accesibles y serán preguntadas en un diálogo entre PSU-ASPSP. Además, la lista de balances y transactions también deben ir vacías si son usadas."
+        },
+        "balances": {
+          "items": {
+            "$ref": "#/definitions/AccountReference"
+          },
+          "$ref": "#/definitions/ListAccountReference",
+          "description": "Indica las cuentas sobre las que pedir balances. Si la lista está vacía, el TPP está solicitando todas las cuentas accesibles y serán preguntadas en un diálogo entre PSU-ASPSP. Además, la lista de accounts y transactions también deben ir vacías si son usadas."
+        },
+        "transactions": {
+          "items": {
+            "$ref": "#/definitions/AccountReference"
+          },
+          "$ref": "#/definitions/ListAccountReference",
+          "description": "Indica las cuentas sobre las que pedir transacciones. Si la lista está vacía, el TPP está solicitando todas las cuentas accesibles y serán preguntadas en un diálogo entre PSU-ASPSP. Además, la lista de balances y accounts también deben ir vacías si son usadas."
+        },
+        "availableAccounts": {
+          "type": "string",
+          "example": "allAcounts",
+          "description": "Solo el valor “allAcounts” es admitido"
+        },
+        "availableAccountsWithBalance": {
+          "type": "string",
+          "example": "allAcounts",
+          "description": "Solo el valor “allAcounts” es admitido"
+        },
+        "allPsd2": {
+          "type": "string",
+          "example": "allAcounts",
+          "description": "Solo el valor “allAcounts” es admitido"
+        }
+      }
+    },
+    "RequestInicioPago": {
+      "type": "object",
+      "properties": {
+        "instructedAmount": {
+          "$ref": "#/definitions/Amount"
+        },
+        "debtorAccount": {
+          "$ref": "#/definitions/AccountReference"
+        },
+        "creditorName": {
+          "type": "string",
+          "example": "Nombre123"
+        },
+        "creditorAccount": {
+          "$ref": "#/definitions/AccountReference"
+        },
+        "creditorAgent": {
+          "type": "string",
+          "example": "XSXHXSMMXXX"
+        },
+        "creditorAddress": {
+          "$ref": "#/definitions/Address"
+        },
+        "remittanceInformationUnstructured": {
+          "type": "string",
+          "example": "Information Example"
+        },
+        "chargeBearer": {
+          "type": "string",
+          "example": "SLEV"
+        },
+        "requestedExecutionDate": {
+          "type": "string",
+          "example": "2019-01-12"
+        }
+      }
+    },
+    "RequestCrearPeriodico": {
+      "type": "object",
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "description": "El primer día aplicable de ejecución desde esta fecha es el primer pago",
+          "example": "2018-12-20"
+        },
+        "executionRule": {
+          "type": "string",
+          "description": "Valores soportados: • following • preceeding Define el comportamiento cuando las fechas del pago recurrente caen en fin de semana o festivo. Entonces el pago se ejecuta el día laboral anterior o posterior. El ASPSP puede rechazar la petición debido al valor comunicado si las reglas de la Banca Online no soportan esta regla de ejecución.",
+          "example": "following"
+        },
+        "endDate": {
+          "type": "string",
+          "example": "2018-12-20",
+          "description": "El último día aplicable de ejecución. Si no viene se trata de una orden permanente sin fin."
+        },
+        "frequency": {
+          "type": "string",
+          "description": "La frecuencia del pago recurrente resultante de esta orden permanente. Valores permitidos: • daily • weekly • everyTwoWeeks • monthly • everyTwoMonths • quarterly • semi-annual",
+          "example": "semi-annual"
+        },
+        "dayOfExecution": {
+          "type": "string",
+          "description": "\"31\" es último. Sigue la expresión regular \\d{1,2} La fecha se refiere a la zona horaria del ASPSP. Solo si soportado en Banca Online del ASPSP.",
+          "example": "01"
+        },
+        "instructedAmount": {
+          "$ref": "#/definitions/Amount",
+          "description": "Información de la transferencia realizada."
+        },
+        "debtorAccount": {
+          "$ref": "#/definitions/AccountReference",
+          "description": "Cuenta del ordenante. Nota: este campo puede ser opcional en algunos servicios como pagos bulk",
+          "example": ""
+        },
+        "creditorName": {
+          "type": "string",
+          "description": "Nombre del beneficiario",
+          "example": "Nombre"
+        },
+        "creditorAccount": {
+          "$ref": "#/definitions/AccountReference",
+          "description": "Cuenta del beneficiario"
+        },
+        "creditorAgent": {
+          "type": "string",
+          "description": "BIC de la cuenta del beneficiario.",
+          "example": "XSXHXSMMXXX"
+        },
+        "creditorAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Dirección del beneficiario"
+        },
+        "remittanceInformationUnstructured": {
+          "type": "string",
+          "description": "Informacion adicional",
+          "example": "Informacion adicional"
+        },
+        "chargeBearer": {
+          "type": "string",
+          "description": "Valores permitidos: • DEBT • CRED • SHAR • SLEV",
+          "example": "SLEV"
+        },
+        "requestedExecutionDate": {
+          "type": "string",
+          "description": "Fecha de ejecución solicitada para pagos futuros. Formato: ISODate"
+        }
+      }
+    },
+    "RequestInicioPagoConListadoCuentasDisponible": {
+      "type": "object",
+      "properties": {
+        "instructedAmount": {
+          "$ref": "#/definitions/Amount",
+          "description": "Información de la transferencia realizada."
+        },
+        "creditorName": {
+          "type": "string",
+          "description": "Nombre del beneficiario",
+          "example": "Nombre"
+        },
+        "creditorAccount": {
+          "$ref": "#/definitions/AccountReference",
+          "description": "Cuenta del beneficiario"
+        },
+        "creditorAgent": {
+          "type": "string",
+          "description": "BIC de la cuenta del beneficiario.",
+          "example": "XSXHXSMMXXX"
+        },
+        "creditorAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Dirección del beneficiario"
+        },
+        "remittanceInformationUnstructured": {
+          "type": "string",
+          "description": "Informacion adicional",
+          "example": "Informacion Adicional"
+        }
+      }
+    },
+    "ListSinglePayment": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SinglePayment"
+      }
+    },
+    "ListSinglePaymentBulk": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SinglePaymentBulk"
+      }
+    },
+    "ListAccountReference": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AccountReference"
+      }
+    },
+    "ResponseInicioPago": {
+      "properties": {
+        "transactionStatus": {
+          "type": "string",
+          "description": "Estado de la transaccion",
+          "example": "RCVD"
+        },
+        "paymentId": {
+          "properties": [],
+          "type": "string",
+          "description": "Identificador del recurso que referencia a la iniciación de pago.",
+          "example": "1b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+        },
+        "transactionFees": {
+          "properties": [],
+          "description": "Comisiones asociadas al pago.",
+          "example": "",
+          "$ref": "#/definitions/Amount"
+        },
+        "transactionFeeIndicator": {
+          "properties": [],
+          "type": "boolean",
+          "description": "Si es igual a \"true\", la transacción implicará una comisión según el ASPSP o según lo acordado entre ASPSP y PSU. Si es igual a \"false\", la transacción no implicará ninguna comisión adicional para el PSU.",
+          "example": "true"
+        },
+        "_links": {
+          "properties": [],
+          "type": "string",
+          "description": "Lista de hipervínculos para ser reconocidos por el TPP. Tipos soportados en esta respuesta:"
+        },
+        "psuMessage": {
+          "properties": [],
+          "type": "string",
+          "example": "Informacion para el PSU",
+          "description": "Texto a mostrar al PSU."
+        },
+        "tppMessages": {
+          "properties": [],
+          "$ref": "#/definitions/ListTppMessages",
+          "description": "Mensaje para el TPP"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TppMessage": {
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Categoría del tipo de mensaje recibido. Posibles valores: ERROR o WARNING",
+          "example": "ERROR"
+        },
+        "code": {
+          "properties": [],
+          "type": "string",
+          "description": "Código de respuesta.",
+          "example": "CONSENT_INVALID"
+        },
+        "path": {
+          "properties": [],
+          "type": "string",
+          "description": "Path al campo referenciando el error."
+        },
+        "text": {
+          "properties": [],
+          "type": "string",
+          "description": "Texto adicional explicativo.",
+          "example": "Ejemplo"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "category"
+      ]
+    },
+    "ListTppMessages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TppMessage"
+      }
+    },
+    "LinksInicioPago": {
+      "properties": {
+        "propiedad-nueva-1": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SinglePaymentBulk": {
+      "type": "object",
+      "properties": {
+        "instructedAmount": {
+          "$ref": "#/definitions/Amount",
+          "description": "Información de la transferencia realizada."
+        },
+        "creditorName": {
+          "type": "string",
+          "description": "Nombre del beneficiario",
+          "example": "Nombre"
+        },
+        "creditorAccount": {
+          "$ref": "#/definitions/AccountReference",
+          "description": "Cuenta del ordenante. Nota: este campo puede ser opcional en algunos servicios como pagos bulk"
+        },
+        "creditorAgent": {
+          "type": "string",
+          "description": "BIC de la cuenta del beneficiario",
+          "example": "XXXLESMMXXX"
+        },
+        "creditorAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Direccion Beneficiario"
+        },
+        "remittanceInformationUnstructured": {
+          "type": "string",
+          "description": "Informacion Adicional",
+          "example": "Informacion adicional"
+        },
+        "chargeBearer": {
+          "type": "string",
+          "description": "Valores permitidos: Valores permitidos: • DEBT • CRED • SHAR • SLEV",
+          "example": "SLEV"
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api-entrada-xs2a/services/{aspsp}/v1/sva/payments/{payment-product}": {
+      "post": {
+        "summary": "Realización inicio de pago sin informar de la cuenta ordenante",
+        "description": "Este servicio permite al TPP la realización de un inicio de un pago sin informar la cuenta del ordenante “debtorAccount” y proporciona el listado de cuentas durante el flujo SCA para que el PSU seleccione una.",
+        "operationId": "startPayment_NoDebtorAcc",
+        "parameters": [
+          {
+            "name": "aspsp",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "URL del hub donde se publica el servicio"
+          },
+          {
+            "name": "payment-product",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Producto de pago a usar.",
+            "enum": [
+              "sepa-credit-transfers",
+              "instant-sepa-credit-transfers",
+              "target-2-payments",
+              "cross-border-credit-transfers"
+            ]
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "application/json"
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Identificador único de la transacción asignado por el TPP. Ej: X-Request-ID: 1b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer Token. Obtenido en una autenticación previa sobre Auth2. Ej:  Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA",
+            "default": "Bearer 6yBnsqnMQQ"
+          },
+          {
+            "name": "Consent-ID",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Este dato es contenido si la transacción de inicio de pago forma parte de una sesión (combinación de AIS/PIS). Contendrá el consentId del consentimiento AIS que se realizó previo al inicio de pago. . Ej: Consent-ID: 123-qwer-456"
+          },
+          {
+            "name": "PSU-IP-Address",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Dirección IP de la petición HTPP entre el PSU y el TPP. Si no está disponible, el TPP debe usar la dirección IP usada por el TPP cuando envía esta petición. Ej: Ej: PSU-IP-Address: 192.168.16.5"
+          },
+          {
+            "name": "PSU-IP-Port",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Puerto IP de la petición HTTP entre el PSU y el TPP si está disponible. Ejemplo: PSU-IP-Port: 443"
+          },
+          {
+            "name": "PSU-Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept header de la petición HTTP entre PSU y el TPP. Ej: PSU-Accept: application/json"
+          },
+          {
+            "name": "PSU-Accept-Charset",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept charset header de la petición HTTP entre PSU y el TPP. PSU-Accept-Charset: utf-8"
+          },
+          {
+            "name": "PSU-Accept-Encoding",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept encoding header de la petición HTTP entre PSU y el TPP. PSU-Accept-Language: gzip "
+          },
+          {
+            "name": "PSU-Accept-Language",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept language header de la petición HTTP entre PSU y el TPP. PSU-Accept-Language: es-ES "
+          },
+          {
+            "name": "PSU-User-Agent",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Navegador o sistema operativo de la petición HTTP entre el PSU y el TPP. Ejemplo: PSU-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729) "
+          },
+          {
+            "name": "PSU-Http-Method",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Método HTTP usado en la interfaz entre PSU y TPP. Valores permitidos: POST. Ej: PSU-Http-Method: POST ",
+            "default": "POST"
+          },
+          {
+            "name": "PSU-Device-ID",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "UUID (Universally Unique Identifier) para un dispositivo. El UUID identifica al dispositivo o a una instalación de una aplicación en un dispositivo. Este ID no debe ser modificado hasta la desinstalación de la aplicación del dispositivo. Ej: PSU-Device-ID: 5b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "PSU-Geo-Location",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Localización correspondiente a la petición HTTP entre el PSU y el TPP. Ej: PSU-Geo-Location: GEO:90.023856;25.345963"
+          },
+          {
+            "name": "TPP-Redirect-URI",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "URI del TPP donde el flujo de la transacción debe ser redirigido después de alguna de las fases del SCA. Es recomendado usar siempre este campo de cabecera.En el futuro, este campo podría cambiar a obligatorio. Ej: TPP-Redirect-URI: https://www.tpp.com/cb",
+            "default": "http://www.example.com"
+          },
+          {
+            "name": "TPP-Nok-Redirect-URI",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Si esta URI es contenida, el TPP está solicitando redirigir el flujo de la transacción a esta dirección en vez de al TPP-Redirect-URI en caso de un resultado negativo del método de SCA por redirección. \"TPP-Nok-Redirect-URI\":\"https://www.tpp.com/cb/nok\"",
+            "default": "http://www.exampleNok.com"
+          },
+          {
+            "name": "Digest",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Es contenido si viaja el campo Signature. Ej: Digest: SHA-256=NzdmZjA4YjY5M2M2NDYyMmVjOWFmMGNmYTZiNTU3MjVmNDI4NTRlMzJkYzE3ZmNmMDE3ZGFmMjhhNTc5OTU3OQ=="
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Firma de la petición por el TPP. "
+          },
+          {
+            "name": "TPP-Signature-Certificate",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Certificado del TPP usado para firmar la petición, en base64. Ej: TPP-Signature-Certificate: MIIHgzCCBmugAwIBAgIIZzZvBQlt0UcwDQYJ………….KoZIhvcNAQELBQAwSTELMAkGA1UEBhMCVVMxEzARBgNVBA "
+          },
+          {
+            "name": "Body",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/RequestInicioPagoConListadoCuentasDisponible"
+            },
+            "description": "Body de la petición"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api-entrada-xs2a/services/{aspsp}/v1/payments/{payment-product}": {
+      "post": {
+        "summary": "Inicio de pago",
+        "description": "Este mensaje es enviado por el TPP hacia el HUB para la realización de inicio de un pago.",
+        "operationId": "inicioPago",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "aspsp",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Nombre del ASPSP al que desea realizar la petición."
+          },
+          {
+            "name": "payment-product",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "sepa-credit-transfers",
+              "instant-sepa-credit-transfers",
+              "target-2-payments",
+              "cross-border-credit-transfers"
+            ]
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "application/json"
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Identificador único de la transacción asignado por el TPP. Ej: X-Request-ID: 1b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer Token. Obtenido en una autenticación previa sobre Auth2. Ej:  Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA",
+            "default": "Bearer 6yBnsqnMQQ"
+          },
+          {
+            "name": "Consent-ID",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Este dato es contenido si la transacción de inicio de pago forma parte de una sesión (combinación de AIS/PIS). Contendrá el consentId del consentimiento AIS que se realizó previo al inicio de pago. . Ej: Consent-ID: 123-qwer-456"
+          },
+          {
+            "name": "PSU-IP-Address",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Dirección IP de la petición HTPP entre el PSU y el TPP. Si no está disponible, el TPP debe usar la dirección IP usada por el TPP cuando envía esta petición. Ej: Ej: PSU-IP-Address: 192.168.16.5"
+          },
+          {
+            "name": "PSU-IP-Port",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Puerto IP de la petición HTTP entre el PSU y el TPP si está disponible. Ejemplo: PSU-IP-Port: 443"
+          },
+          {
+            "name": "PSU-Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept header de la petición HTTP entre PSU y el TPP. Ej: PSU-Accept: application/json"
+          },
+          {
+            "name": "PSU-Accept-Charset",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept charset header de la petición HTTP entre PSU y el TPP. PSU-Accept-Charset: utf-8"
+          },
+          {
+            "name": "PSU-Accept-Encoding",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept encoding header de la petición HTTP entre PSU y el TPP. PSU-Accept-Language: gzip "
+          },
+          {
+            "name": "PSU-Accept-Language",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept language header de la petición HTTP entre PSU y el TPP. PSU-Accept-Language: es-ES "
+          },
+          {
+            "name": "PSU-User-Agent",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Navegador o sistema operativo de la petición HTTP entre el PSU y el TPP. Ejemplo: PSU-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729) "
+          },
+          {
+            "name": "PSU-Http-Method",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Método HTTP usado en la interfaz entre PSU y TPP. Valores permitidos: POST. Ej: PSU-Http-Method: POST ",
+            "default": "POST"
+          },
+          {
+            "name": "PSU-Device-ID",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "UUID (Universally Unique Identifier) para un dispositivo. El UUID identifica al dispositivo o a una instalación de una aplicación en un dispositivo. Este ID no debe ser modificado hasta la desinstalación de la aplicación del dispositivo. Ej: PSU-Device-ID: 5b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "PSU-Geo-Location",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Localización correspondiente a la petición HTTP entre el PSU y el TPP. Ej: PSU-Geo-Location: GEO:90.023856;25.345963"
+          },
+          {
+            "name": "TPP-Redirect-Preferred",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Si es \"true\", el TPP ha comunicado al HUB que prefiere SCA por redirección. Si es \"false\", el TPP ha comunicado al HUB que prefiere no ser redireccionado para SCA y el procedimiento será por flujo desacoplado. Si el parámetro no es usado, el ASPSP elegirá el flujo SCA a aplicar dependiendo del método SCA elegido por el TPP/PSU."
+          },
+          {
+            "name": "TPP-Redirect-URI",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "URI del TPP donde el flujo de la transacción debe ser redirigido después de alguna de las fases del SCA. Es recomendado usar siempre este campo de cabecera.En el futuro, este campo podría cambiar a obligatorio. Ej: TPP-Redirect-URI: https://www.tpp.com/cb"
+          },
+          {
+            "name": "TPP-Nok-Redirect-URI",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Si esta URI es contenida, el TPP está solicitando redirigir el flujo de la transacción a esta dirección en vez de al TPP-Redirect-URI en caso de un resultado negativo del método de SCA por redirección. \"TPP-Nok-Redirect-URI\":\"https://www.tpp.com/cb/nok\""
+          },
+          {
+            "name": "Digest",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Es contenido si viaja el campo Signature. Ej: Digest: SHA-256=NzdmZjA4YjY5M2M2NDYyMmVjOWFmMGNmYTZiNTU3MjVmNDI4NTRlMzJkYzE3ZmNmMDE3ZGFmMjhhNTc5OTU3OQ=="
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Firma de la petición por el TPP. "
+          },
+          {
+            "name": "TPP-Signature-Certificate",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Certificado del TPP usado para firmar la petición, en base64. Ej: TPP-Signature-Certificate: MIIHgzCCBmugAwIBAgIIZzZvBQlt0UcwDQYJ………….KoZIhvcNAQELBQAwSTELMAkGA1UEBhMCVVMxEzARBgNVBA "
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RequestInicioPago"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseInicioPago"
+            }
+          }
+        }
+      }
+    },
+    "/api-entrada-xs2a/services/{aspsp}/v1/bulk-payments/{payment-product}": {
+      "post": {
+        "summary": "Inicio de pago Bulk",
+        "description": "Este mensaje es enviado por el TPP hacia el HUB para la realización de inicio de pago bulk",
+        "operationId": "inicioPagoBulk",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "aspsp",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Nombre del ASPSP al que desea realizar la petición."
+          },
+          {
+            "name": "payment-product",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "sepa-credit-transfers",
+              "instant-sepa-credit-transfers",
+              "target-2-payments",
+              "cross-border-credit-transfers"
+            ]
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "application/json"
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Identificador único de la transacción asignado por el TPP. Ej: X-Request-ID: 1b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer Token. Obtenido en una autenticación previa sobre Auth2. Ej:  Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA",
+            "default": "Bearer 6yBnsqnMQQ"
+          },
+          {
+            "name": "Consent-ID",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Este dato es contenido si la transacción de inicio de pago forma parte de una sesión (combinación de AIS/PIS). Contendrá el consentId del consentimiento AIS que se realizó previo al inicio de pago. . Ej: Consent-ID: 123-qwer-456"
+          },
+          {
+            "name": "PSU-IP-Address",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Dirección IP de la petición HTPP entre el PSU y el TPP. Si no está disponible, el TPP debe usar la dirección IP usada por el TPP cuando envía esta petición. Ej: Ej: PSU-IP-Address: 192.168.16.5"
+          },
+          {
+            "name": "PSU-IP-Port",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Puerto IP de la petición HTTP entre el PSU y el TPP si está disponible. Ejemplo: PSU-IP-Port: 443"
+          },
+          {
+            "name": "PSU-Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept header de la petición HTTP entre PSU y el TPP. Ej: PSU-Accept: application/json"
+          },
+          {
+            "name": "PSU-Accept-Charset",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept charset header de la petición HTTP entre PSU y el TPP. PSU-Accept-Charset: utf-8"
+          },
+          {
+            "name": "PSU-Accept-Encoding",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept encoding header de la petición HTTP entre PSU y el TPP. PSU-Accept-Language: gzip "
+          },
+          {
+            "name": "PSU-Accept-Language",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept language header de la petición HTTP entre PSU y el TPP. PSU-Accept-Language: es-ES "
+          },
+          {
+            "name": "PSU-User-Agent",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Navegador o sistema operativo de la petición HTTP entre el PSU y el TPP. Ejemplo: PSU-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729) "
+          },
+          {
+            "name": "PSU-Http-Method",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Método HTTP usado en la interfaz entre PSU y TPP. Valores permitidos: POST. Ej: PSU-Http-Method: POST ",
+            "default": "POST"
+          },
+          {
+            "name": "PSU-Device-ID",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "UUID (Universally Unique Identifier) para un dispositivo. El UUID identifica al dispositivo o a una instalación de una aplicación en un dispositivo. Este ID no debe ser modificado hasta la desinstalación de la aplicación del dispositivo. Ej: PSU-Device-ID: 5b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "PSU-Geo-Location",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Localización correspondiente a la petición HTTP entre el PSU y el TPP. Ej: PSU-Geo-Location: GEO:90.023856;25.345963"
+          },
+          {
+            "name": "TPP-Redirect-Preferred",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Si es \"true\", el TPP ha comunicado al HUB que prefiere SCA por redirección. Si es \"false\", el TPP ha comunicado al HUB que prefiere no ser redireccionado para SCA y el procedimiento será por flujo desacoplado. Si el parámetro no es usado, el ASPSP elegirá el flujo SCA a aplicar dependiendo del método SCA elegido por el TPP/PSU."
+          },
+          {
+            "name": "TPP-Redirect-URI",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "URI del TPP donde el flujo de la transacción debe ser redirigido después de alguna de las fases del SCA. Es recomendado usar siempre este campo de cabecera.En el futuro, este campo podría cambiar a obligatorio. Ej: TPP-Redirect-URI: https://www.tpp.com/cb",
+            "default": "www.example.com"
+          },
+          {
+            "name": "TPP-Nok-Redirect-URI",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Si esta URI es contenida, el TPP está solicitando redirigir el flujo de la transacción a esta dirección en vez de al TPP-Redirect-URI en caso de un resultado negativo del método de SCA por redirección. \"TPP-Nok-Redirect-URI\":\"https://www.tpp.com/cb/nok\"",
+            "default": "www.exampleNOK.com"
+          },
+          {
+            "name": "Digest",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Es contenido si viaja el campo Signature. Ej: Digest: SHA-256=NzdmZjA4YjY5M2M2NDYyMmVjOWFmMGNmYTZiNTU3MjVmNDI4NTRlMzJkYzE3ZmNmMDE3ZGFmMjhhNTc5OTU3OQ=="
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Firma de la petición por el TPP. "
+          },
+          {
+            "name": "TPP-Signature-Certificate",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Certificado del TPP usado para firmar la petición, en base64. Ej: TPP-Signature-Certificate: MIIHgzCCBmugAwIBAgIIZzZvBQlt0UcwDQYJ………….KoZIhvcNAQELBQAwSTELMAkGA1UEBhMCVVMxEzARBgNVBA "
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RequestCrearBulk"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseInicioPago"
+            }
+          }
+        }
+      }
+    },
+    "/api-entrada-xs2a/services/{aspsp}/v1/periodic-payments/{payment-product}": {
+      "post": {
+        "summary": "Inicio de pago",
+        "description": "Mensaje enviado por el TPP al ASPSP a través del Hub para crear un inicio de pago recurrente/periódico. La funcionalidad de inicios de pagos recurrentes es cubierta por la especificación de Berlin Group como la iniciación de una orden específica permanente. Un TPP puede enviar un inicio de pago recurrente donde se proporciona la fecha de inicio, frecuencia y, condicionalmnete, fecha fin. Una vez autorizado por el PSU, el pago será ejecutado por el ASPSP, si es posible, siguiendo la “orden permanente” como fue enviada por el TPP. No se necesitan acciones adicionales por parte del TPP. En este contexto, este pago es considerado un pago periódico para diferenciar el pago de otros tipos de pagos recurrentes donde terceras partes están iniciando la misma cantidad de dinero. Nota: para las órdenes permanentes de inicios de pago, el ASPSP siempre pedirá SCA con Dynamic linking. No se permiten exenciones.",
+        "operationId": "inicioPagoPeriodico",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "aspsp",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Nombre del ASPSP al que desea realizar la petición."
+          },
+          {
+            "name": "payment-product",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "sepa-credit-transfers",
+              "instant-sepa-credit-transfers",
+              "target-2-payments",
+              "cross-border-credit-transfers"
+            ]
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "application/json"
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Identificador único de la transacción asignado por el TPP. Ej: X-Request-ID: 1b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer Token. Obtenido en una autenticación previa sobre Auth2. Ej:  Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA",
+            "default": "Bearer 6yBnsqnMQQ"
+          },
+          {
+            "name": "Consent-ID",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Este dato es contenido si la transacción de inicio de pago forma parte de una sesión (combinación de AIS/PIS). Contendrá el consentId del consentimiento AIS que se realizó previo al inicio de pago. . Ej: Consent-ID: 123-qwer-456"
+          },
+          {
+            "name": "PSU-IP-Address",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Dirección IP de la petición HTPP entre el PSU y el TPP. Si no está disponible, el TPP debe usar la dirección IP usada por el TPP cuando envía esta petición. Ej: Ej: PSU-IP-Address: 192.168.16.5"
+          },
+          {
+            "name": "PSU-IP-Port",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Puerto IP de la petición HTTP entre el PSU y el TPP si está disponible. Ejemplo: PSU-IP-Port: 443"
+          },
+          {
+            "name": "PSU-Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept header de la petición HTTP entre PSU y el TPP. Ej: PSU-Accept: application/json"
+          },
+          {
+            "name": "PSU-Accept-Charset",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept charset header de la petición HTTP entre PSU y el TPP. PSU-Accept-Charset: utf-8"
+          },
+          {
+            "name": "PSU-Accept-Encoding",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept encoding header de la petición HTTP entre PSU y el TPP. PSU-Accept-Language: gzip "
+          },
+          {
+            "name": "PSU-Accept-Language",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept language header de la petición HTTP entre PSU y el TPP. PSU-Accept-Language: es-ES "
+          },
+          {
+            "name": "PSU-User-Agent",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Navegador o sistema operativo de la petición HTTP entre el PSU y el TPP. Ejemplo: PSU-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729) "
+          },
+          {
+            "name": "PSU-Http-Method",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Método HTTP usado en la interfaz entre PSU y TPP. Valores permitidos: POST. Ej: PSU-Http-Method: POST ",
+            "default": "POST"
+          },
+          {
+            "name": "PSU-Device-ID",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "UUID (Universally Unique Identifier) para un dispositivo. El UUID identifica al dispositivo o a una instalación de una aplicación en un dispositivo. Este ID no debe ser modificado hasta la desinstalación de la aplicación del dispositivo. Ej: PSU-Device-ID: 5b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "PSU-Geo-Location",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Localización correspondiente a la petición HTTP entre el PSU y el TPP. Ej: PSU-Geo-Location: GEO:90.023856;25.345963"
+          },
+          {
+            "name": "TPP-Redirect-Preferred",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Si es \"true\", el TPP ha comunicado al HUB que prefiere SCA por redirección. Si es \"false\", el TPP ha comunicado al HUB que prefiere no ser redireccionado para SCA y el procedimiento será por flujo desacoplado. Si el parámetro no es usado, el ASPSP elegirá el flujo SCA a aplicar dependiendo del método SCA elegido por el TPP/PSU."
+          },
+          {
+            "name": "TPP-Redirect-URI",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "URI del TPP donde el flujo de la transacción debe ser redirigido después de alguna de las fases del SCA. Es recomendado usar siempre este campo de cabecera.En el futuro, este campo podría cambiar a obligatorio. Ej: TPP-Redirect-URI: https://www.tpp.com/cb",
+            "default": "www.example.com"
+          },
+          {
+            "name": "TPP-Nok-Redirect-URI",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Si esta URI es contenida, el TPP está solicitando redirigir el flujo de la transacción a esta dirección en vez de al TPP-Redirect-URI en caso de un resultado negativo del método de SCA por redirección. \"TPP-Nok-Redirect-URI\":\"https://www.tpp.com/cb/nok\"",
+            "default": "www.exampleNOK.com"
+          },
+          {
+            "name": "Digest",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Es contenido si viaja el campo Signature. Ej: Digest: SHA-256=NzdmZjA4YjY5M2M2NDYyMmVjOWFmMGNmYTZiNTU3MjVmNDI4NTRlMzJkYzE3ZmNmMDE3ZGFmMjhhNTc5OTU3OQ=="
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Firma de la petición por el TPP. "
+          },
+          {
+            "name": "TPP-Signature-Certificate",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Certificado del TPP usado para firmar la petición, en base64. Ej: TPP-Signature-Certificate: MIIHgzCCBmugAwIBAgIIZzZvBQlt0UcwDQYJ………….KoZIhvcNAQELBQAwSTELMAkGA1UEBhMCVVMxEzARBgNVBA "
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RequestCrearPeriodico"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseInicioPago"
+            }
+          }
+        }
+      }
+    },
+    "/api-entrada-xs2a/services/{aspsp}/v1/payments/{payment-product}/{payment-id}/status": {
+      "get": {
+        "summary": "status - Informacion del estado pago",
+        "description": "Este mensaje es enviado por el TPP al HUB para solicitar información del estado en el que se encuentra la iniciación de pago que solicitó el TPP",
+        "operationId": "status",
+        "parameters": [
+          {
+            "name": "aspsp",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Nombre del ASPSP al que desea realizar la petición."
+          },
+          {
+            "name": "payment-product",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Producto de pago a usar.",
+            "enum": [
+              "sepa-credit-transfers",
+              "instant-sepa-credit-transfers",
+              "target-2-payments",
+              "cross-border-credit-transfers"
+            ]
+          },
+          {
+            "name": "payment-id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Identificador del recurso que referencia a la iniciación de pago. Enviado previamente como respuesta a un mensaje de iniciación de pago del TPP al HUB."
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Identificador único de la transacción asignado por el TPP. Ej: X-Request-ID: 1b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer Token. Obtenido en una autenticación previa sobre Auth2. Ej:  Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA",
+            "default": "Bearer 6yBnsqnMQQ"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Formato soportado de la respuesta."
+          },
+          {
+            "name": "PSU-IP-Address",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Dirección IP de la petición HTPP entre el PSU y el TPP. Si no está disponible, el TPP debe usar la dirección IP usada por el TPP cuando envía esta petición. Ej: Ej: PSU-IP-Address: 192.168.16.5"
+          },
+          {
+            "name": "PSU-IP-Port",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Puerto IP de la petición HTTP entre el PSU y el TPP si está disponible. Ejemplo: PSU-IP-Port: 443"
+          },
+          {
+            "name": "PSU-Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept header de la petición HTTP entre PSU y el TPP. Ej: PSU-Accept: application/json"
+          },
+          {
+            "name": "PSU-Accept-Charset",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept charset header de la petición HTTP entre PSU y el TPP. PSU-Accept-Charset: utf-8"
+          },
+          {
+            "name": "PSU-Accept-Encoding",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept encoding header de la petición HTTP entre PSU y el TPP. PSU-Accept-Encoding: gzip"
+          },
+          {
+            "name": "PSU-Accept-Language",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept language header de la petición HTTP entre PSU y el TPP. PSU-Accept-Language: es-ES "
+          },
+          {
+            "name": "PSU-User-Agent",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Navegador o sistema operativo de la petición HTTP entre el PSU y el TPP. Ejemplo: PSU-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729) "
+          },
+          {
+            "name": "PSU-Http-Method",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Método HTTP usado en la interfaz entre PSU y TPP. Valores permitidos: GET. Ej: PSU-Http-Method: GET ",
+            "default": "GET"
+          },
+          {
+            "name": "PSU-Device-ID",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "UUID (Universally Unique Identifier) para un dispositivo. El UUID identifica al dispositivo o a una instalación de una aplicación en un dispositivo. Este ID no debe ser modificado hasta la desinstalación de la aplicación del dispositivo. Ej: PSU-Device-ID: 5b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "PSU-Geo-Location",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Localización correspondiente a la petición HTTP entre el PSU y el TPP. Ej: PSU-Geo-Location: GEO:90.023856;25.345963"
+          },
+          {
+            "name": "Digest",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Es contenido si viaja el campo Signature. Ej: Digest: SHA-256=NzdmZjA4YjY5M2M2NDYyMmVjOWFmMGNmYTZiNTU3MjVmNDI4NTRlMzJkYzE3ZmNmMDE3ZGFmMjhhNTc5OTU3OQ=="
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Firma de la petición por el TPP. "
+          },
+          {
+            "name": "TPP-Signature-Certificate",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Certificado del TPP usado para firmar la petición, en base64. Ej: TPP-Signature-Certificate: MIIHgzCCBmugAwIBAgIIZzZvBQlt0UcwDQYJ………….KoZIhvcNAQELBQAwSTELMAkGA1UEBhMCVVMxEzARBgNVBA "
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api-entrada-xs2a/services/{aspsp}/v1/bulk-payments/{payment-product}/{payment-id}/status": {
+      "get": {
+        "summary": "statusBulk - Informacion del estado pago",
+        "description": "Este mensaje es enviado por el TPP al HUB para solicitar información del estado en el que se encuentra la iniciación de pago que solicitó el TPP",
+        "operationId": "statusBulk",
+        "parameters": [
+          {
+            "name": "aspsp",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Nombre del ASPSP al que desea realizar la petición."
+          },
+          {
+            "name": "payment-product",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Producto de pago a usar.",
+            "enum": [
+              "sepa-credit-transfers",
+              "instant-sepa-credit-transfers",
+              "target-2-payments",
+              "cross-border-credit-transfers"
+            ]
+          },
+          {
+            "name": "payment-id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Identificador del recurso que referencia a la iniciación de pago. Enviado previamente como respuesta a un mensaje de iniciación de pago del TPP al HUB."
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Identificador único de la transacción asignado por el TPP. Ej: X-Request-ID: 1b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer Token. Obtenido en una autenticación previa sobre Auth2. Ej:  Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA",
+            "default": "Bearer 6yBnsqnMQQ"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Formato soportado de la respuesta."
+          },
+          {
+            "name": "PSU-IP-Address",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Dirección IP de la petición HTPP entre el PSU y el TPP. Si no está disponible, el TPP debe usar la dirección IP usada por el TPP cuando envía esta petición. Ej: Ej: PSU-IP-Address: 192.168.16.5"
+          },
+          {
+            "name": "PSU-IP-Port",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Puerto IP de la petición HTTP entre el PSU y el TPP si está disponible. Ejemplo: PSU-IP-Port: 443"
+          },
+          {
+            "name": "PSU-Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept header de la petición HTTP entre PSU y el TPP. Ej: PSU-Accept: application/json"
+          },
+          {
+            "name": "PSU-Accept-Charset",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept charset header de la petición HTTP entre PSU y el TPP. PSU-Accept-Charset: utf-8"
+          },
+          {
+            "name": "PSU-Accept-Encoding",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept encoding header de la petición HTTP entre PSU y el TPP. PSU-Accept-Encoding: gzip"
+          },
+          {
+            "name": "PSU-Accept-Language",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept language header de la petición HTTP entre PSU y el TPP. PSU-Accept-Language: es-ES "
+          },
+          {
+            "name": "PSU-User-Agent",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Navegador o sistema operativo de la petición HTTP entre el PSU y el TPP. Ejemplo: PSU-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729) "
+          },
+          {
+            "name": "PSU-Http-Method",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Método HTTP usado en la interfaz entre PSU y TPP. Valores permitidos: GET. Ej: PSU-Http-Method: GET ",
+            "default": "GET"
+          },
+          {
+            "name": "PSU-Device-ID",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "UUID (Universally Unique Identifier) para un dispositivo. El UUID identifica al dispositivo o a una instalación de una aplicación en un dispositivo. Este ID no debe ser modificado hasta la desinstalación de la aplicación del dispositivo. Ej: PSU-Device-ID: 5b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "PSU-Geo-Location",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Localización correspondiente a la petición HTTP entre el PSU y el TPP. Ej: PSU-Geo-Location: GEO:90.023856;25.345963"
+          },
+          {
+            "name": "Digest",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Es contenido si viaja el campo Signature. Ej: Digest: SHA-256=NzdmZjA4YjY5M2M2NDYyMmVjOWFmMGNmYTZiNTU3MjVmNDI4NTRlMzJkYzE3ZmNmMDE3ZGFmMjhhNTc5OTU3OQ=="
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Firma de la petición por el TPP. "
+          },
+          {
+            "name": "TPP-Signature-Certificate",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Certificado del TPP usado para firmar la petición, en base64. Ej: TPP-Signature-Certificate: MIIHgzCCBmugAwIBAgIIZzZvBQlt0UcwDQYJ………….KoZIhvcNAQELBQAwSTELMAkGA1UEBhMCVVMxEzARBgNVBA "
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api-entrada-xs2a/services/{aspsp}/v1/periodic-payments/{payment-product}/{payment-id}/status": {
+      "get": {
+        "summary": "statusPeriodic - Informacion del estado pago",
+        "description": "Este mensaje es enviado por el TPP al HUB para solicitar información del estado en el que se encuentra la iniciación de pago que solicitó el TPP",
+        "operationId": "statusPeriodic",
+        "parameters": [
+          {
+            "name": "aspsp",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Nombre del ASPSP al que desea realizar la petición."
+          },
+          {
+            "name": "payment-product",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Producto de pago a usar.",
+            "enum": [
+              "sepa-credit-transfers",
+              "instant-sepa-credit-transfers",
+              "target-2-payments",
+              "cross-border-credit-transfers"
+            ]
+          },
+          {
+            "name": "payment-id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Identificador del recurso que referencia a la iniciación de pago. Enviado previamente como respuesta a un mensaje de iniciación de pago del TPP al HUB."
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Identificador único de la transacción asignado por el TPP. Ej: X-Request-ID: 1b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer Token. Obtenido en una autenticación previa sobre Auth2. Ej:  Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA",
+            "default": "Bearer 6yBnsqnMQQ"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Formato soportado de la respuesta."
+          },
+          {
+            "name": "PSU-IP-Address",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Dirección IP de la petición HTPP entre el PSU y el TPP. Si no está disponible, el TPP debe usar la dirección IP usada por el TPP cuando envía esta petición. Ej: Ej: PSU-IP-Address: 192.168.16.5"
+          },
+          {
+            "name": "PSU-IP-Port",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Puerto IP de la petición HTTP entre el PSU y el TPP si está disponible. Ejemplo: PSU-IP-Port: 443"
+          },
+          {
+            "name": "PSU-Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept header de la petición HTTP entre PSU y el TPP. Ej: PSU-Accept: application/json"
+          },
+          {
+            "name": "PSU-Accept-Charset",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept charset header de la petición HTTP entre PSU y el TPP. PSU-Accept-Charset: utf-8"
+          },
+          {
+            "name": "PSU-Accept-Encoding",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept encoding header de la petición HTTP entre PSU y el TPP. PSU-Accept-Encoding: gzip"
+          },
+          {
+            "name": "PSU-Accept-Language",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept language header de la petición HTTP entre PSU y el TPP. PSU-Accept-Language: es-ES "
+          },
+          {
+            "name": "PSU-User-Agent",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Navegador o sistema operativo de la petición HTTP entre el PSU y el TPP. Ejemplo: PSU-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729) "
+          },
+          {
+            "name": "PSU-Http-Method",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Método HTTP usado en la interfaz entre PSU y TPP. Valores permitidos: GET. Ej: PSU-Http-Method: GET ",
+            "default": "GET"
+          },
+          {
+            "name": "PSU-Device-ID",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "UUID (Universally Unique Identifier) para un dispositivo. El UUID identifica al dispositivo o a una instalación de una aplicación en un dispositivo. Este ID no debe ser modificado hasta la desinstalación de la aplicación del dispositivo. Ej: PSU-Device-ID: 5b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "PSU-Geo-Location",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Localización correspondiente a la petición HTTP entre el PSU y el TPP. Ej: PSU-Geo-Location: GEO:90.023856;25.345963"
+          },
+          {
+            "name": "Digest",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Es contenido si viaja el campo Signature. Ej: Digest: SHA-256=NzdmZjA4YjY5M2M2NDYyMmVjOWFmMGNmYTZiNTU3MjVmNDI4NTRlMzJkYzE3ZmNmMDE3ZGFmMjhhNTc5OTU3OQ=="
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Firma de la petición por el TPP. "
+          },
+          {
+            "name": "TPP-Signature-Certificate",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Certificado del TPP usado para firmar la petición, en base64. Ej: TPP-Signature-Certificate: MIIHgzCCBmugAwIBAgIIZzZvBQlt0UcwDQYJ………….KoZIhvcNAQELBQAwSTELMAkGA1UEBhMCVVMxEzARBgNVBA "
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api-entrada-xs2a/services/{aspsp}/v1/payments/{payment-product}/{payment-id}": {
+      "get": {
+        "summary": "Informacion del pago",
+        "description": "Este mensaje es enviado por el TPP al HUB para solicitar información de un inicio de pago",
+        "operationId": "getPaymentInfo",
+        "parameters": [
+          {
+            "name": "aspsp",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Nombre del ASPSP al que desea realizar la petición."
+          },
+          {
+            "name": "payment-product",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Producto de pago a usar.",
+            "enum": [
+              "sepa-credit-transfers",
+              "instant-sepa-credit-transfers",
+              "target-2-payments",
+              "cross-border-credit-transfers"
+            ]
+          },
+          {
+            "name": "payment-id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Identificador del recurso que referencia a la iniciación de pago. Enviado previamente como respuesta a un mensaje de iniciación de pago del TPP al HUB."
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Identificador único de la transacción asignado por el TPP. Ej: X-Request-ID: 1b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer Token. Obtenido en una autenticación previa sobre Auth2. Ej:  Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA",
+            "default": "Bearer 6yBnsqnMQQ"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Formato soportado de la respuesta. "
+          },
+          {
+            "name": "PSU-IP-Address",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Dirección IP de la petición HTPP entre el PSU y el TPP. Si no está disponible, el TPP debe usar la dirección IP usada por el TPP cuando envía esta petición. Ej: Ej: PSU-IP-Address: 192.168.16.5"
+          },
+          {
+            "name": "PSU-IP-Port",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Puerto IP de la petición HTTP entre el PSU y el TPP si está disponible. Ejemplo: PSU-IP-Port: 443"
+          },
+          {
+            "name": "PSU-Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept header de la petición HTTP entre PSU y el TPP. Ej: PSU-Accept: application/json"
+          },
+          {
+            "name": "PSU-Accept-Charset",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept charset header de la petición HTTP entre PSU y el TPP. PSU-Accept-Charset: utf-8"
+          },
+          {
+            "name": "PSU-Accept-Encoding",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept encoding header de la petición HTTP entre PSU y el TPP. PSU-Accept-Encoding: gzip"
+          },
+          {
+            "name": "PSU-Accept-Language",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept language header de la petición HTTP entre PSU y el TPP. PSU-Accept-Language: es-ES "
+          },
+          {
+            "name": "PSU-User-Agent",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Navegador o sistema operativo de la petición HTTP entre el PSU y el TPP. Ejemplo: PSU-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729) "
+          },
+          {
+            "name": "PSU-Http-Method",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Método HTTP usado en la interfaz entre PSU y TPP. Valores permitidos: GET. Ej: PSU-Http-Method: GET ",
+            "default": "GET"
+          },
+          {
+            "name": "PSU-Device-ID",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "UUID (Universally Unique Identifier) para un dispositivo. El UUID identifica al dispositivo o a una instalación de una aplicación en un dispositivo. Este ID no debe ser modificado hasta la desinstalación de la aplicación del dispositivo. Ej: PSU-Device-ID: 5b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "PSU-Geo-Location",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Localización correspondiente a la petición HTTP entre el PSU y el TPP. Ej: PSU-Geo-Location: GEO:90.023856;25.345963"
+          },
+          {
+            "name": "Digest",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Es contenido si viaja el campo Signature. Ej: Digest: SHA-256=NzdmZjA4YjY5M2M2NDYyMmVjOWFmMGNmYTZiNTU3MjVmNDI4NTRlMzJkYzE3ZmNmMDE3ZGFmMjhhNTc5OTU3OQ=="
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Firma de la petición por el TPP. "
+          },
+          {
+            "name": "TPP-Signature-Certificate",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Certificado del TPP usado para firmar la petición, en base64. Ej: TPP-Signature-Certificate: MIIHgzCCBmugAwIBAgIIZzZvBQlt0UcwDQYJ………….KoZIhvcNAQELBQAwSTELMAkGA1UEBhMCVVMxEzARBgNVBA "
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api-entrada-xs2a/services/{aspsp}/v1/bulk-payments/{payment-product}/{payment-id}": {
+      "get": {
+        "summary": "Informacion del pago",
+        "description": "Este mensaje es enviado por el TPP al HUB para solicitar información de un inicio de pago",
+        "operationId": "getPaymentInfoBulk",
+        "parameters": [
+          {
+            "name": "aspsp",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Nombre del ASPSP al que desea realizar la petición."
+          },
+          {
+            "name": "payment-product",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Producto de pago a usar.",
+            "enum": [
+              "sepa-credit-transfers",
+              "instant-sepa-credit-transfers",
+              "target-2-payments",
+              "cross-border-credit-transfers"
+            ]
+          },
+          {
+            "name": "payment-id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Identificador del recurso que referencia a la iniciación de pago. Enviado previamente como respuesta a un mensaje de iniciación de pago del TPP al HUB."
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Identificador único de la transacción asignado por el TPP. Ej: X-Request-ID: 1b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer Token. Obtenido en una autenticación previa sobre Auth2. Ej:  Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA",
+            "default": "Bearer 6yBnsqnMQQ"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Formato soportado de la respuesta. "
+          },
+          {
+            "name": "PSU-IP-Address",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Dirección IP de la petición HTPP entre el PSU y el TPP. Si no está disponible, el TPP debe usar la dirección IP usada por el TPP cuando envía esta petición. Ej: Ej: PSU-IP-Address: 192.168.16.5"
+          },
+          {
+            "name": "PSU-IP-Port",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Puerto IP de la petición HTTP entre el PSU y el TPP si está disponible. Ejemplo: PSU-IP-Port: 443"
+          },
+          {
+            "name": "PSU-Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept header de la petición HTTP entre PSU y el TPP. Ej: PSU-Accept: application/json"
+          },
+          {
+            "name": "PSU-Accept-Charset",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept charset header de la petición HTTP entre PSU y el TPP. PSU-Accept-Charset: utf-8"
+          },
+          {
+            "name": "PSU-Accept-Encoding",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept encoding header de la petición HTTP entre PSU y el TPP. PSU-Accept-Encoding: gzip"
+          },
+          {
+            "name": "PSU-Accept-Language",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept language header de la petición HTTP entre PSU y el TPP. PSU-Accept-Language: es-ES "
+          },
+          {
+            "name": "PSU-User-Agent",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Navegador o sistema operativo de la petición HTTP entre el PSU y el TPP. Ejemplo: PSU-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729) "
+          },
+          {
+            "name": "PSU-Http-Method",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Método HTTP usado en la interfaz entre PSU y TPP. Valores permitidos: GET. Ej: PSU-Http-Method: GET ",
+            "default": "GET"
+          },
+          {
+            "name": "PSU-Device-ID",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "UUID (Universally Unique Identifier) para un dispositivo. El UUID identifica al dispositivo o a una instalación de una aplicación en un dispositivo. Este ID no debe ser modificado hasta la desinstalación de la aplicación del dispositivo. Ej: PSU-Device-ID: 5b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "PSU-Geo-Location",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Localización correspondiente a la petición HTTP entre el PSU y el TPP. Ej: PSU-Geo-Location: GEO:90.023856;25.345963"
+          },
+          {
+            "name": "Digest",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Es contenido si viaja el campo Signature. Ej: Digest: SHA-256=NzdmZjA4YjY5M2M2NDYyMmVjOWFmMGNmYTZiNTU3MjVmNDI4NTRlMzJkYzE3ZmNmMDE3ZGFmMjhhNTc5OTU3OQ=="
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Firma de la petición por el TPP. "
+          },
+          {
+            "name": "TPP-Signature-Certificate",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Certificado del TPP usado para firmar la petición, en base64. Ej: TPP-Signature-Certificate: MIIHgzCCBmugAwIBAgIIZzZvBQlt0UcwDQYJ………….KoZIhvcNAQELBQAwSTELMAkGA1UEBhMCVVMxEzARBgNVBA "
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api-entrada-xs2a/services/{aspsp}/v1/periodic-payments/{payment-product}/{payment-id}": {
+      "get": {
+        "summary": "Informacion del pago",
+        "description": "Este mensaje es enviado por el TPP al HUB para solicitar información de un inicio de pago",
+        "operationId": "getPaymentInfoPeriodic",
+        "parameters": [
+          {
+            "name": "aspsp",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Nombre del ASPSP al que desea realizar la petición."
+          },
+          {
+            "name": "payment-product",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Producto de pago a usar.",
+            "enum": [
+              "sepa-credit-transfers",
+              "instant-sepa-credit-transfers",
+              "target-2-payments",
+              "cross-border-credit-transfers"
+            ]
+          },
+          {
+            "name": "payment-id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Identificador del recurso que referencia a la iniciación de pago. Enviado previamente como respuesta a un mensaje de iniciación de pago del TPP al HUB."
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Identificador único de la transacción asignado por el TPP. Ej: X-Request-ID: 1b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer Token. Obtenido en una autenticación previa sobre Auth2. Ej:  Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA",
+            "default": "Bearer 6yBnsqnMQQ"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Formato soportado de la respuesta. "
+          },
+          {
+            "name": "PSU-IP-Address",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Dirección IP de la petición HTPP entre el PSU y el TPP. Si no está disponible, el TPP debe usar la dirección IP usada por el TPP cuando envía esta petición. Ej: Ej: PSU-IP-Address: 192.168.16.5"
+          },
+          {
+            "name": "PSU-IP-Port",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Puerto IP de la petición HTTP entre el PSU y el TPP si está disponible. Ejemplo: PSU-IP-Port: 443"
+          },
+          {
+            "name": "PSU-Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept header de la petición HTTP entre PSU y el TPP. Ej: PSU-Accept: application/json"
+          },
+          {
+            "name": "PSU-Accept-Charset",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept charset header de la petición HTTP entre PSU y el TPP. PSU-Accept-Charset: utf-8"
+          },
+          {
+            "name": "PSU-Accept-Encoding",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept encoding header de la petición HTTP entre PSU y el TPP. PSU-Accept-Encoding: gzip"
+          },
+          {
+            "name": "PSU-Accept-Language",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept language header de la petición HTTP entre PSU y el TPP. PSU-Accept-Language: es-ES "
+          },
+          {
+            "name": "PSU-User-Agent",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Navegador o sistema operativo de la petición HTTP entre el PSU y el TPP. Ejemplo: PSU-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729) "
+          },
+          {
+            "name": "PSU-Http-Method",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Método HTTP usado en la interfaz entre PSU y TPP. Valores permitidos: GET. Ej: PSU-Http-Method: GET ",
+            "default": "GET"
+          },
+          {
+            "name": "PSU-Device-ID",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "UUID (Universally Unique Identifier) para un dispositivo. El UUID identifica al dispositivo o a una instalación de una aplicación en un dispositivo. Este ID no debe ser modificado hasta la desinstalación de la aplicación del dispositivo. Ej: PSU-Device-ID: 5b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "PSU-Geo-Location",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Localización correspondiente a la petición HTTP entre el PSU y el TPP. Ej: PSU-Geo-Location: GEO:90.023856;25.345963"
+          },
+          {
+            "name": "Digest",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Es contenido si viaja el campo Signature. Ej: Digest: SHA-256=NzdmZjA4YjY5M2M2NDYyMmVjOWFmMGNmYTZiNTU3MjVmNDI4NTRlMzJkYzE3ZmNmMDE3ZGFmMjhhNTc5OTU3OQ=="
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Firma de la petición por el TPP. "
+          },
+          {
+            "name": "TPP-Signature-Certificate",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Certificado del TPP usado para firmar la petición, en base64. Ej: TPP-Signature-Certificate: MIIHgzCCBmugAwIBAgIIZzZvBQlt0UcwDQYJ………….KoZIhvcNAQELBQAwSTELMAkGA1UEBhMCVVMxEzARBgNVBA "
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api-entrada-xs2a/services/{aspsp}/v1/{payment-service}/{payment-product}/{payment-id}": {
+      "delete": {
+        "summary": "Cancelar inicio de pago",
+        "description": "Esta petición es enviada por el TPP al ASPSP a través del Hub y permite iniciar la cancelación de un pago. Dependiendo del servicio de pago, el producto de pago y la implementación del ASPSP, esta petición podríar ser suficiente para cancelar el pago o podría ser necesario una autorización.",
+        "operationId": "deletePayment",
+        "parameters": [
+          {
+            "name": "aspsp",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Nombre del ASPSP al que desea realizar la petición."
+          },
+          {
+            "name": "payment-service",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Producto de pago a usar.",
+            "enum": [
+              "payments",
+              "bulk-payments",
+              "periodic-payments"
+            ]
+          },
+          {
+            "name": "payment-product",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Producto de pago a usar.",
+            "enum": [
+              "sepa-credit-transfers",
+              "instant-sepa-credit-transfers",
+              "target-2-payments",
+              "cross-border-credit-transfers"
+            ]
+          },
+          {
+            "name": "payment-id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Identificador del recurso que referencia a la iniciación de pago.Enviado previamente como respuesta a un mensaje de iniciación de pago del HUB al ASPSP."
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Identificador único de la transacción asignado por el TPP. Ej: X-Request-ID: 1b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer Token. Obtenido en una autenticación previa sobre Auth2. Ej:  Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA",
+            "default": "Bearer 6yBnsqnMQQ"
+          },
+          {
+            "name": "PSU-IP-Address",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Dirección IP de la petición HTPP entre el PSU y el TPP. Si no está disponible, el TPP debe usar la dirección IP usada por el TPP cuando envía esta petición. Ej: Ej: PSU-IP-Address: 192.168.16.5"
+          },
+          {
+            "name": "PSU-IP-Port",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Puerto IP de la petición HTTP entre el PSU y el TPP si está disponible. Ejemplo: PSU-IP-Port: 443"
+          },
+          {
+            "name": "PSU-Accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept header de la petición HTTP entre PSU y el TPP. Ej: PSU-Accept: application/json"
+          },
+          {
+            "name": "PSU-Accept-Charset",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept charset header de la petición HTTP entre PSU y el TPP. PSU-Accept-Charset: utf-8"
+          },
+          {
+            "name": "PSU-Accept-Encoding",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept encoding header de la petición HTTP entre PSU y el TPP. PSU-Accept-Encoding: gzip"
+          },
+          {
+            "name": "PSU-Accept-Language",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Accept language header de la petición HTTP entre PSU y el TPP. PSU-Accept-Language: es-ES "
+          },
+          {
+            "name": "PSU-User-Agent",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Navegador o sistema operativo de la petición HTTP entre el PSU y el TPP. Ejemplo: PSU-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729) "
+          },
+          {
+            "name": "PSU-Http-Method",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Método HTTP usado en la interfaz entre PSU y TPP. Valores permitidos: GET, POST, PUT, PATCH, DELETE. Ej: PSU-Http-Method: GET ",
+            "default": "DELETE"
+          },
+          {
+            "name": "PSU-Device-ID",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "UUID (Universally Unique Identifier) para un dispositivo. El UUID identifica al dispositivo o a una instalación de una aplicación en un dispositivo. Este ID no debe ser modificado hasta la desinstalación de la aplicación del dispositivo. Ej: PSU-Device-ID: 5b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "PSU-Geo-Location",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Localización correspondiente a la petición HTTP entre el PSU y el TPP. Ej: PSU-Geo-Location: GEO:90.023856;25.345963"
+          },
+          {
+            "name": "Digest",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Es contenido si viaja el campo Signature. Ej: Digest: SHA-256=NzdmZjA4YjY5M2M2NDYyMmVjOWFmMGNmYTZiNTU3MjVmNDI4NTRlMzJkYzE3ZmNmMDE3ZGFmMjhhNTc5OTU3OQ=="
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Firma de la petición por el TPP. "
+          },
+          {
+            "name": "TPP-Signature-Certificate",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Certificado del TPP usado para firmar la petición, en base64. Ej: TPP-Signature-Certificate: MIIHgzCCBmugAwIBAgIIZzZvBQlt0UcwDQYJ………….KoZIhvcNAQELBQAwSTELMAkGA1UEBhMCVVMxEzARBgNVBA "
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api-entrada-xs2a/services/v1/sva/aspsps": {
+      "get": {
+        "summary": "Servicio de ASPSPs disponibles",
+        "description": "Este mensaje es enviado por el TPP hacia el HUB para recibir la información acerca de que ASPSP están disponibles en el sistema.",
+        "operationId": "getAspsps",
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Identificador único de la transacción asignado por el TPP. Ej: X-Request-ID: 1b3ab8e8-0fd5-43d2-946e-d75958b172e7"
+          },
+          {
+            "name": "Digest",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Es contenido si viaja el campo Signature. Ej: Digest: SHA-256=NzdmZjA4YjY5M2M2NDYyMmVjOWFmMGNmYTZiNTU3MjVmNDI4NTRlMzJkYzE3ZmNmMDE3ZGFmMjhhNTc5OTU3OQ=="
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Firma de la petición por el TPP. "
+          },
+          {
+            "name": "TPP-Signature-Certificate",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Certificado del TPP usado para firmar la petición, en base64. Ej: TPP-Signature-Certificate: MIIHgzCCBmugAwIBAgIIZzZvBQlt0UcwDQYJ………….KoZIhvcNAQELBQAwSTELMAkGA1UEBhMCVVMxEzARBgNVBA "
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "x-ibm-configuration": {
+    "enforced": true,
+    "testable": true,
+    "phase": "realized"
+  },
+  "produces": [
+    "application/json"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "schemes": [
+    "https"
+  ],
+  "securityDefinitions": {
+    "RedsysClientSecret": {
+      "type": "apiKey",
+      "description": "Clave acceso consumidor APIS",
+      "in": "header",
+      "name": "X-IBM-Client-Secret"
+    },
+    "RedsysClientId": {
+      "type": "apiKey",
+      "description": "Identificador consumidor APIS",
+      "in": "header",
+      "name": "X-IBM-Client-Id"
+    }
+  },
+  "security": [
+    {
+      "RedsysClientId": []
+    }
+  ],
+  "basePath": "/",
+  "x-ibm-endpoints": [
+    {
+      "endpointUrl": "https://apis-i.redsys.es:20443/psd2/xs2a",
+      "description": "Endpoint entorno Integracion",
+      "type": [
+        "production",
+        "development"
+      ]
+    }
+  ]
+}

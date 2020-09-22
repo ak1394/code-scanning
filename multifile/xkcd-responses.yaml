@@ -1,0 +1,4 @@
+"303":
+  description: OK
+  schema:
+    $ref: "xkcd-schema.yaml#/definitions/User"

@@ -1,0 +1,33 @@
+/info.0.json:
+  get:
+    description: |
+      Fetch current comic and metadata.
+    responses:
+      "200":
+        description: OK
+        schema:
+          $ref: "xkcd-schema.yaml#/definitions/comic"
+"/{comicId}/info.0.json":
+  get:
+    description: |
+      Fetch comics and metadata  by comic id.
+    parameters:
+      - in: path
+        name: comicId
+        required: true
+        type: number
+    responses:
+      "200":
+        description: OK
+        schema:
+          $ref: "xkcd-schema.yaml#/definitions/User"
+      "201":
+        description: OK
+        schema:
+          $ref: "xkcd-schema.yaml#/definitions/User"
+      "202":
+        description: OK
+        schema:
+          $ref: "xkcd-schema.yaml#/definitions/User"
+      "303":
+        $ref: "xkcd-responses.yaml#/303"

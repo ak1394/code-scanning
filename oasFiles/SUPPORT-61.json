@@ -1,0 +1,196 @@
+{
+    "info": {
+        "title": "Node Swagger API",
+        "version": "1.0.1",
+        "description": "Demonstrating how to desribe a RESTful API with Swagger"
+    },
+    "schemes": [
+        "http"
+    ],
+    "host": "127.0.0.1:4010",
+    "basePath": "/",
+    "swagger": "2.0",
+    "paths": {
+        "/api/puppies": {
+            "get": {
+                "tags": [
+                    "Puppies"
+                ],
+                "description": "Returns all puppies",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of puppies",
+                        "schema": {
+                            "$ref": "#/definitions/Puppy"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Puppies"
+                ],
+                "description": "Creates a new puppy",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "puppy",
+                        "description": "Puppy object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Puppy"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully created"
+                    }
+                }
+            }
+        },
+        "/api/puppies/{id}": {
+            "get": {
+                "tags": [
+                    "Puppies"
+                ],
+                "description": "Returns a single puppy",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "description": "Puppy's id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A single puppy",
+                        "schema": {
+                            "$ref": "#/definitions/Puppy"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Puppies"
+                ],
+                "description": "Updates a single puppy",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "description": "Puppy's id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "puppy",
+                        "description": "Puppy object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Puppy"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Puppies"
+                ],
+                "description": "Deletes a single puppy",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "description": "Puppy's id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted"
+                    }
+                }
+            }
+        },
+        "/api/puppies/{id}/name": {
+            "patch": {
+                "tags": [
+                    "Puppies"
+                ],
+                "description": "Updates a single puppy",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "description": "Puppy's id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "description": "Puppy's name",
+                        "in": "query",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Puppy": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "breed": {
+                    "type": "string"
+                },
+                "age": {
+                    "type": "integer"
+                },
+                "sex": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "responses": {},
+    "parameters": {},
+    "securityDefinitions": {},
+    "tags": []
+}

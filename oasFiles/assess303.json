@@ -1,0 +1,81 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "version": "1.0.0",
+        "title": "Assess 3.0.3",
+        "description": "Assessment for 3.0.3 OAS version",
+        "termsOfService": "https://askRoger.42.com",
+        "contact": {
+            "name": "42Crunch"
+        },
+        "license": {
+            "name": "MIT"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:4010"
+        }
+    ],
+    "security": [
+        {
+            "basic": []
+        }
+    ],
+    "paths": {
+        "/path-item-method-not-allowed-scan": {
+            "post": {
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "maximum": 10
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "created"
+                    },
+                    "201": {
+                        "description": "created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "maximum": 10
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "failure"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "basic": {
+                "type": "http",
+                "scheme": "basic",
+                "bearerFormat": "Basic base64(username:password)"
+            }
+        }
+    }
+}

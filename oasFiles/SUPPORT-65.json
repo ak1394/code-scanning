@@ -1,0 +1,650 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Yet Another Node.js Blogg Application API",
+        "description": "Yet Another Node.js Blogg Application API",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:4010"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Roles",
+            "description": "API for Roles in the system"
+        },
+        {
+            "name": "Class",
+            "description": "API for class in the system"
+        },
+        {
+            "name": "Students",
+            "description": "API for students in the system"
+        },
+        {
+            "name": "Teachers",
+            "description": "API for Teachers in the system"
+        }
+    ],
+    "paths": {
+        "/role": {
+            "get": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Get all roles in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {}
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Roles"
+                ],
+                "description": "Create new role in system",
+                "requestBody": {
+                    "description": "User that we want to create",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Role"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": "New user is created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Role"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-codegen-request-body-name": "Role_Name"
+            }
+        },
+        "/class": {
+            "get": {
+                "tags": [
+                    "Class"
+                ],
+                "summary": "Get all classes in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {}
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Class"
+                ],
+                "description": "Create new class in system",
+                "requestBody": {
+                    "description": "Class that we want to create",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Class"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": "New user is created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Role"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-codegen-request-body-name": "Class"
+            }
+        },
+        "/students": {
+            "get": {
+                "tags": [
+                    "Students"
+                ],
+                "summary": "Get all students in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Student"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Students"
+                ],
+                "description": "Create new user in system",
+                "requestBody": {
+                    "description": "User that we want to create",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Student"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": "New user is created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Student"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-codegen-request-body-name": "user"
+            }
+        },
+        "/students/{Student_Id}": {
+            "get": {
+                "tags": [
+                    "Students"
+                ],
+                "summary": "Get student with given ID",
+                "parameters": [
+                    {
+                        "name": "Student_Id",
+                        "in": "path",
+                        "description": "ID of student that we want to find",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Student is found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Student"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Students"
+                ],
+                "summary": "Update student with give ID",
+                "parameters": [
+                    {
+                        "name": "Student_Id",
+                        "in": "path",
+                        "description": "ID of student that we want to find",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Student with new values of properties",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Student"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": "Student is updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Student"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-codegen-request-body-name": "student"
+            },
+            "delete": {
+                "tags": [
+                    "Students"
+                ],
+                "summary": "Delete student with given ID",
+                "parameters": [
+                    {
+                        "name": "Student_Id",
+                        "in": "path",
+                        "description": "ID of student that we want to find",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Student is deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Student"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/teachers": {
+            "get": {
+                "tags": [
+                    "Teachers"
+                ],
+                "summary": "Get all teachers in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Teacher"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Teachers"
+                ],
+                "description": "Create new teacher in system",
+                "requestBody": {
+                    "description": "Teacher that we want to create",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Teacher"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": "New teacher is created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Teacher"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-codegen-request-body-name": "teacher"
+            }
+        },
+        "/teachers/{Teacher_Id}": {
+            "get": {
+                "tags": [
+                    "Teachers"
+                ],
+                "summary": "Get teacher with given ID",
+                "parameters": [
+                    {
+                        "name": "Teacher_Id",
+                        "in": "path",
+                        "description": "ID of teacher that we want to find",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Teacher is found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Teacher"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Teachers"
+                ],
+                "summary": "Update teacher with give ID",
+                "parameters": [
+                    {
+                        "name": "Teacher_Id",
+                        "in": "path",
+                        "description": "ID of teacher that we want to find",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Teacher with new values of properties",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Teacher"
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": "Teacher is updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Teacher"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-codegen-request-body-name": "teacher"
+            },
+            "delete": {
+                "tags": [
+                    "Teachers"
+                ],
+                "summary": "Delete teacher with given ID",
+                "parameters": [
+                    {
+                        "name": "Teacher_Id",
+                        "in": "path",
+                        "description": "ID of teacher that we want to find",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Teacher is deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Teacher"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/role/{Role_Id}": {
+            "get": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Get role with given ID",
+                "parameters": [
+                    {
+                        "name": "Role_Id",
+                        "in": "path",
+                        "description": "ID of role that we want to find",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role is found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Role"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Delete role with given ID",
+                "parameters": [
+                    {
+                        "name": "Role_Id",
+                        "in": "path",
+                        "description": "ID of role that we want to find",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role is deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Role"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/class/{Class_Id}": {
+            "get": {
+                "tags": [
+                    "GetClassById"
+                ],
+                "summary": "Get class with given ID",
+                "parameters": [
+                    {
+                        "name": "Class_Id",
+                        "in": "path",
+                        "description": "ID of class that we want to find",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Class is found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Class"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "DeleteClassById"
+                ],
+                "summary": "Delete class with given ID",
+                "parameters": [
+                    {
+                        "name": "Class_Id",
+                        "in": "path",
+                        "description": "ID of class that we want to find",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Class is deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Class"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Student": {
+                "required": [
+                    "Student_Email"
+                ],
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "Student_Id": {
+                        "type": "integer"
+                    },
+                    "Student_Name": {
+                        "type": "string"
+                    },
+                    "Parents_Name": {
+                        "type": "string"
+                    },
+                    "Emergency_Ph_No": {
+                        "type": "string"
+                    },
+                    "Student_Email": {
+                        "type": "string"
+                    },
+                    "Role_Id": {
+                        "type": "integer"
+                    },
+                    "Class_Id": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "Students": {
+                "$ref": "#/components/schemas/Student"
+            },
+            "Teacher": {
+                "required": [
+                    "Teacher_Email"
+                ],
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "Teacher_Id": {
+                        "type": "integer"
+                    },
+                    "Teacher_Name": {
+                        "type": "string"
+                    },
+                    "Teacher_Email": {
+                        "type": "string"
+                    },
+                    "Teacher_Qualification": {
+                        "type": "string"
+                    },
+                    "Teacher_phoneNo": {
+                        "type": "string"
+                    },
+                    "Role_Id": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "Teachers": {
+                "$ref": "#/components/schemas/Teacher"
+            },
+            "Role": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "Role_Id": {
+                        "type": "integer"
+                    },
+                    "Role_Name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Roles": {
+                "$ref": "#/components/schemas/Role"
+            },
+            "Class": {
+                "required": [
+                    "Class_Name"
+                ],
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "Class_Id": {
+                        "type": "integer"
+                    },
+                    "Class_Name": {
+                        "type": "string"
+                    },
+                    "Teacher_Email": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Classes": {
+                "$ref": "#/components/schemas/Class"
+            }
+        }
+    }
+}

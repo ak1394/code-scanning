@@ -1,0 +1,243 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "version": "1.0.0",
+        "title": "Golang API",
+        "description": "A Testing API",
+        "termsOfService": "",
+        "contact": {
+        "name": "42Crunch"
+        },
+        "license": {
+            "name": "MIT"
+        }
+    },
+    "servers": [
+        {
+        "url": "http://127.0.0.1:4010"
+        }
+    ],
+    "security":[
+        {
+            "apikey":[],"basic":[]
+        }
+    ],
+    "paths": {
+        "/unsecure/{id}":{
+            "post":{
+                "security":[
+                    {
+                        "apikey":[],"basic":[]
+                    }
+                ],
+                "description":"unsecure path",
+                "parameters":[
+                    {
+                        "$ref":"#/components/parameters/id"
+                    },
+                    {
+                        "$ref":"#/components/parameters/string"
+                    },
+                    {
+                        "$ref":"#/components/parameters/boolean"
+                    },
+                    {
+                        "$ref":"#/components/parameters/headerInteger"
+                    }
+                ],
+                "requestBody":{
+                    "$ref":"#/components/requestBodies/apiRequestBody"
+                },
+                "responses": {
+                    "200": {
+                        "$ref":"#/components/responses/successResponse"
+                    },
+                    "400":{
+                        "$ref":"#/components/responses/errorResponse"
+                    },
+                    "default": {
+                        "$ref":"#/components/responses/errorResponse"
+                    }
+                }
+            }
+        },
+        "/secure/{id}":{
+            "post":{
+                "description":"secure path",
+                "parameters":[
+                    {
+                        "$ref":"#/components/parameters/id"
+                    },
+                    {
+                        "$ref":"#/components/parameters/string"
+                    },
+                    {
+                        "$ref":"#/components/parameters/boolean"
+                    },
+                    {
+                        "$ref":"#/components/parameters/headerInteger"
+                    }
+                ],
+                "requestBody":{
+                    "$ref":"#/components/requestBodies/apiRequestBody"
+                },
+                "responses": {
+                    "200": {
+                        "$ref":"#/components/responses/successResponse"
+                    },
+                    "400":{
+                        "$ref":"#/components/responses/errorResponse"
+                    },
+                    "default": {
+                        "$ref":"#/components/responses/errorResponse"
+                    }
+                }
+            }
+        }
+    },
+    "components":{
+        "securitySchemes":{
+            "apikey":{
+                "type":"apiKey",
+                "name":"apiKey",
+                "in":"header"
+            },
+            "basic":{
+                "type":"http",
+                "scheme":"basic",
+                "bearerFormat":"Basic base64(username:password)"
+            },
+            "bearer":{
+                "type":"http",
+                "scheme":"bearer",
+                "bearerFormat":"Bearer {BearerValue}"
+            }
+        },
+        "requestBodies":{
+            "apiRequestBody":{
+                "description":"request body to send to the api",
+                "content":{
+                    "application/json":{
+                        "schema":{
+                            "$ref":"#/components/schemas/requestBodySchema"
+                        }
+                    }
+                },
+                "required":true
+            }
+        },
+        "responses":{
+            "successResponse":{
+                "description": "request sucessfull",
+                "content":{
+                    "application/json":{
+                        "schema":{
+                            "$ref":"#/components/schemas/successfulResponseBody"
+                        }
+                    }
+                }
+            },
+            "errorResponse":{
+                "description":"response error",
+                "content":{
+                    "application/json":{
+                        "schema":{
+                            "$ref":"#/components/schemas/errorResponseBody"
+                        }
+                    }
+                }
+            }
+            
+        },
+        "schemas":{
+            "requestBodySchema":{
+                "additionalProperties":false,
+                "type":"object",
+                "required":["id","string","boolean"],
+                "properties":{
+                    "id":{
+                        "$ref":"#/components/schemas/id"
+                    },
+                    "string":{
+                        "$ref":"#/components/schemas/string"
+                    },
+                    "boolean":{
+                        "$ref":"#/components/schemas/boolean"
+                    }
+                }
+            },
+            "successfulResponseBody":{
+                "additionalProperties":false,
+                "type":"object",
+                "required":["id"],
+                "properties":{
+                    "id":{
+                        "$ref":"#/components/schemas/id"
+                    }
+                }
+            },
+            "errorResponseBody":{
+                "additionalProperties":false,
+                "type":"object",
+                "required":["error"],
+                "properties":{
+                    "error":{
+                        "type": "integer",
+                        "format":"int32",
+                        "minimum":0,
+                        "maximum":1000
+                    }
+                }
+            },
+            "id":{
+                "type": "integer",
+                "format":"int32",
+                "minimum":0,
+                "maximum":10
+            },
+            "string":{
+                "type": "string",
+                "minLength":5,
+                "maxLength":10
+            },
+            "boolean":{
+                "type": "boolean"
+            }
+        },
+        "parameters":{
+            "id":{
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema":{
+                    "$ref":"#/components/schemas/id"
+                }
+            },
+            "string":{
+            "name": "string",
+            "in": "query",
+            "required": true,
+            "schema":{
+                "$ref":"#/components/schemas/string"
+            }
+            },
+            "boolean":{
+                "name": "boolean",
+                "in": "query",
+                "required": true,
+                "schema":{
+                    "$ref":"#/components/schemas/boolean"
+                }
+            },
+            "headerInteger":{
+                "name": "Header-Integer",
+                "in": "header",
+                "required": true,
+                "schema":{
+                    "$ref":"#/components/schemas/id"
+                }
+            }
+            
+        }
+    }
+}

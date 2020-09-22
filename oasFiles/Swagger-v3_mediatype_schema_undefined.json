@@ -1,0 +1,1543 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "SANEF API",
+    "description": "Documentation Sanef API.",
+    "version": "v1"
+  },
+  "paths": {
+    "/accountBalanceEnquiryOneTimeInitiate": {
+      "get": {
+        "tags": [
+          "AccountBalanceEnquiry"
+        ],
+        "summary": "Get account detail endpoint",
+        "parameters": [
+          {
+            "name": "ReferenceNumber",
+            "in": "query"
+          },
+          {
+            "name": "DebitAccountNumber",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Hash",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accountBalanceEnquiryOneTimeValidate": {
+      "get": {
+        "tags": [
+          "AccountBalanceEnquiry"
+        ],
+        "parameters": [
+          {
+            "name": "ReferenceNumber",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "OriginalReferenceNumber",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "AccountNumber",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ValidationCode",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Hash",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accountDetailEnquiry": {
+      "get": {
+        "tags": [
+          "AccountDetail"
+        ],
+        "summary": "Get account detail endpoint",
+        "parameters": [
+          {
+            "name": "ReferenceNumber",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "AccountNumber",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Hash",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accountOpening": {
+      "post": {
+        "tags": [
+          "AccountOpening"
+        ],
+        "summary": "Account opening API\r\nTo get the hash value, append FirstName, MiddleName, ReferenceNumber, PhoneNumber, Gender, DateOfBirth and the client secret key, \r\nthen hash the combination of all appended values. They must be in this order",
+        "description": "Sample request:\r\n\r\n     POST /accountOpening \r\n     {\r\n       \"Salutation\": \"MR.\",\r\n       \"FirstName\": \"Jones\",\r\n       \"MiddleName\": \"Aneke\",\r\n       \"ReferenceNumber\": \"892382382389\",\r\n       \"LastName\": \"Ifok\",\r\n       \"Gender\": \"M\",\r\n       \"Email\": \"me@me.com\",\r\n       \"PhoneNumber\": \"234(0)8031121190\",\r\n       \"DateOfBirth\": \"03/05/1970\",\r\n       \"Address\": \"Ajah\",\r\n       \"MaritalStatus\": \"MRIED\",\r\n       \"Bvn\": \"22203651317\",\r\n       \"Hash\": \"iuwiuwuiiuweu\"\r\n     }",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBankAccountCommand"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBankAccountCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBankAccountCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBankAccountCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accountCredit": {
+      "post": {
+        "tags": [
+          "CreditAccount"
+        ],
+        "summary": "Credit account API",
+        "description": "Sample request:\r\n\r\n     POST /accountCredit \r\n     {\r\n       \"Amount\": \"10.00\",\r\n       \"ReferenceNumber\": \"53000008766\",\r\n       \"CreditAccountNumber\": \"1501294249\",\r\n       \"Narration\": \"please pay money into my accpunt\",\r\n       \"Hash\": \"98bcf662e347d8515978df6f94a18d47623cb6ed7d0f0e395b1f14e0385c746892bdbe1b8541a7024a45e5f3b31ab9a48d04ea15c42cdc71d99e1fcd94b7cb13\",\r\n     }",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CashinDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CashinDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CashinDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CashinDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accountDebitOneTimeInitiate": {
+      "post": {
+        "tags": [
+          "DebitOneTimeInitiate"
+        ],
+        "summary": "API to initiate otp generation\r\nTo get the hash value, append ReferenceNumber, DebitAccountNumber, Amount and the client secret key, \r\nthen hash the combination of all appended values. They must be in this order",
+        "description": "Sample request:\r\n\r\n     POST /accountDebitOneTimeInitiate \r\n     {\r\n       \"ReferenceNumber\": \"12345678909\",\r\n       \"DebitAccountNumber\": \"1300001363\",//1501294256\r\n       \"Hash\": \"98bcf662e347d8515978df6f94a18d47623cb6ed7d0f0e395b1f14e0385c746892bdbe1b8541a7024a45e5f3b31ab9a48d04ea15c42cdc71d99e1fcd94b7cb13\",\r\n       \"Amount\": \"5.00\",\r\n       \"Narration\": \"i want to debit\"\r\n     }",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountToDebitOneTimeInitiateRequestDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountToDebitOneTimeInitiateRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountToDebitOneTimeInitiateRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountToDebitOneTimeInitiateRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accountDebitOneTimeValidate": {
+      "post": {
+        "tags": [
+          "DebitOneTimeValidate"
+        ],
+        "summary": "API to validate otp and debit customer\r\nTo get the hash value, append ReferenceNumber, OriginalReferenceNumber, DebitAccountNumber, validationCode and the client secret key, \r\nthen hash the combination of all appended values. They must be in this order",
+        "description": "Sample request:\r\n\r\n     POST /accountDebitOneTimeInitiate \r\n     {\r\n       \"ReferenceNumber\": \"12345678900\",\r\n       \"OriginalReferenceNumber\":\"12345678901\",\r\n       \"DebitAccountNumber\": \"5300000333\",\r\n       \"validationCode\": \"0987\",\r\n       \"Hash\": \"98bcf662e347d8515978df6f94a18d47623cb6ed7d0f0e395b1f14e0385c746892bdbe1b8541a7024a45e5f3b31ab9a48d04ea15c42cdc71d99e1fcd94b7cb13\"\r\n     }",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountToDebitOneTimeValidateRequestDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountToDebitOneTimeValidateRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountToDebitOneTimeValidateRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountToDebitOneTimeValidateRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hash": {
+      "post": {
+        "tags": [
+          "Hashing"
+        ],
+        "summary": "Hashing API",
+        "description": "Sample request:\r\n\r\n     POST /hash \r\n     {\r\n       \"Data\": \"rawData\",\r\n     }",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/HashData"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HashData"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HashData"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/HashData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/initiateTokenNotification": {
+      "post": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Account opening API",
+        "description": "Sample request:\r\n\r\n     POST /initiateTokenNotification \r\n     {\r\n       \"ReferenceNumber\": \"MR.\",\r\n       \"AccountNUmber\": \"1501294249\",\r\n       \"TokenizationProcessType\": \"AccountDebitOneTimeInitiate\",\r\n       \"Narration\": \"i want to debit\",\r\n       \"Hash\": \"234(0)8031121190\",\r\n     }",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/InitiateOtpCommand"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InitiateOtpCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InitiateOtpCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/InitiateOtpCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponseDtoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponseDtoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponseDtoResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponseDtoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponseDtoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponseDtoResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponseDtoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponseDtoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponseDtoResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transactionStatus": {
+      "get": {
+        "tags": [
+          "TransactionStatus"
+        ],
+        "summary": "Get account detail endpoint",
+        "parameters": [
+          {
+            "name": "ReferenceNumber",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "OriginalReferenceNumber",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Hash",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponseResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getSalutations": {
+      "get": {
+        "tags": [
+          "Utility"
+        ],
+        "summary": "Gets all salutations",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getMaritalStatuses": {
+      "get": {
+        "tags": [
+          "Utility"
+        ],
+        "summary": "Gets all marital statuses",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OperationResponse": {
+        "type": "object",
+        "properties": {
+          "ReferenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "ResultCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ResultMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "DatetimeCompletedUTC": {
+            "type": "string",
+            "nullable": true
+          },
+          "Value": {
+            "type": "string",
+            "nullable": true
+          },
+          "AvailableBalance": {
+            "type": "number",
+            "format": "double"
+          },
+          "TotalBalance": {
+            "type": "number",
+            "format": "double"
+          },
+          "Bvn": {
+            "type": "string",
+            "nullable": true
+          },
+          "AccountName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "OperationResponseResult": {
+        "type": "object",
+        "properties": {
+          "Value": {
+            "$ref": "#/components/schemas/OperationResponse"
+          },
+          "IsSuccess": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "Error": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "Timestamp": {
+            "type": "string",
+            "nullable": true
+          },
+          "ResponseCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsFailure": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "nullable": true
+      },
+      "StringResult": {
+        "type": "object",
+        "properties": {
+          "Value": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "IsSuccess": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "Error": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "Timestamp": {
+            "type": "string",
+            "nullable": true
+          },
+          "ResponseCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsFailure": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "nullable": true
+      },
+      "CreateBankAccountCommand": {
+        "type": "object",
+        "properties": {
+          "Salutation": {
+            "type": "string",
+            "nullable": true
+          },
+          "FirstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "MiddleName": {
+            "type": "string",
+            "nullable": true
+          },
+          "LastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "Gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "Email": {
+            "type": "string",
+            "nullable": true
+          },
+          "PhoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "DateOfBirth": {
+            "type": "string",
+            "nullable": true
+          },
+          "Address": {
+            "type": "string",
+            "nullable": true
+          },
+          "MaritalStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "BVN": {
+            "type": "string",
+            "nullable": true
+          },
+          "StreetAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "AddressLandmark": {
+            "type": "string",
+            "nullable": true
+          },
+          "Country": {
+            "type": "string",
+            "nullable": true
+          },
+          "State": {
+            "type": "string",
+            "nullable": true
+          },
+          "City": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReferenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "AccountType": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstitutionIdentificationNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "LocalGovernmentArea": {
+            "type": "string",
+            "nullable": true
+          },
+          "Occupation": {
+            "type": "string",
+            "nullable": true
+          },
+          "Hash": {
+            "type": "string",
+            "nullable": true
+          },
+          "SecretKey": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "CashinDto": {
+        "type": "object",
+        "properties": {
+          "ReferenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "CreditAccountNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "Amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "DatetimeInitiatedUTC": {
+            "type": "string",
+            "nullable": true
+          },
+          "Narration": {
+            "type": "string",
+            "nullable": true
+          },
+          "Hash": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "AccountToDebitOneTimeInitiateRequestDto": {
+        "type": "object",
+        "properties": {
+          "ReferenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "DebitAccountNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "Amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "Narration": {
+            "type": "string",
+            "nullable": true
+          },
+          "Hash": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "AccountToDebitOneTimeValidateRequestDto": {
+        "type": "object",
+        "properties": {
+          "ReferenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "OriginalReferenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "DebitAccountNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "validationCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "Hash": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "HashData": {
+        "type": "object",
+        "properties": {
+          "Data": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "InitiateOtpCommand": {
+        "type": "object",
+        "properties": {
+          "ReferenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "DebitAccountNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "Hash": {
+            "type": "string",
+            "nullable": true
+          },
+          "SecretKey": {
+            "type": "string",
+            "nullable": true
+          },
+          "Username": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "TransactionResponseDto": {
+        "type": "object",
+        "properties": {
+          "IsSuccessful": {
+            "type": "boolean"
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          },
+          "TransactionReferenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "ResultCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "FeildI27": {
+            "type": "string",
+            "nullable": true
+          },
+          "ResultMessage": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "TransactionResponseDtoResult": {
+        "type": "object",
+        "properties": {
+          "Value": {
+            "$ref": "#/components/schemas/TransactionResponseDto"
+          },
+          "IsSuccess": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "Error": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "Timestamp": {
+            "type": "string",
+            "nullable": true
+          },
+          "ResponseCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsFailure": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "nullable": true
+      },
+      "StringListResult": {
+        "type": "object",
+        "properties": {
+          "Value": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "IsSuccess": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "Error": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "Timestamp": {
+            "type": "string",
+            "nullable": true
+          },
+          "ResponseCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsFailure": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "nullable": true
+      }
+    },
+    "securitySchemes": {
+      "basic": {
+        "type": "http",
+        "description": "Basic Authorization header using the Bearer scheme.",
+        "scheme": "basic"
+      }
+    }
+  },
+  "security": [
+    {
+      "basic": []
+    }
+  ],
+  "servers": [
+    {
+      "url": "https://196.6.192.106:8018"
+    }
+  ]
+}

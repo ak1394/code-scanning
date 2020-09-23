@@ -18,10 +18,6 @@
         "description": "Secured Admin-only calls"
       },
       {
-        "name": "AdmiNs",
-        "description": "tag duplication test"
-      },
-      {
         "name": "users",
         "description": "Operations available to regular, logged in users"
       },
@@ -31,9 +27,6 @@
       }
     ],
     "paths": {
-      "/ApI/lOgiN": {
-          "summary": "operation duplication test"
-      },
       "/api/login": {
         "post": {
           "tags": [
@@ -47,12 +40,6 @@
                   "type": "object",
                   "properties": {
                     "user": {
-                      "type": "string",
-                      "format": "email",
-                      "maxLength": 40,
-                      "pattern": "^([a-zA-Z0-9_\\\\-\\\\.]+)@([a-zA-Z0-9_\\\\-\\\\.]+)\\\\.([a-zA-Z]{2,5})$"
-                    },
-                    "User": {
                       "type": "string",
                       "format": "email",
                       "maxLength": 40,
@@ -222,30 +209,6 @@
                 "maxLength": 700,
                 "pattern": "^([a-zA-Z0-9_=]{4,})\\.([a-zA-Z0-9_=]{4,})\\.([a-zA-Z0-9_\\-\\+\\/=]{4,})"
               }
-            },
-            {
-              "in": "header",
-              "name": "duplicatedHeader",
-              "type": "application/json",
-              "description": "content type duplication test"
-            },
-            {
-              "in": "header",
-              "name": "DuplicatedHeader",
-              "type": "application/json",
-              "description": "content type duplication test"
-            },
-            {
-              "in": "query",
-              "name": "duplicatedquery",
-              "type": "application/json",
-              "description": "query param duplication test"
-            },
-            {
-              "in": "query",
-              "name": "DuplicatedQuery",
-              "type": "application/json",
-              "description": "query param duplication test"
             }
           ],
           "responses": {
@@ -628,7 +591,6 @@
           "required": [
             "id",
             "user",
-            "User",
             "pass",
             "name",
             "is_admin",
@@ -642,13 +604,6 @@
               "maximum": 99999999999
             },
             "user": {
-              "type": "string",
-              "format": "email",
-              "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
-              "minLength": 1,
-              "maxLength": 50
-            },
-            "User": {
               "type": "string",
               "format": "email",
               "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",

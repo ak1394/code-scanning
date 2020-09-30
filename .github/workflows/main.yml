@@ -24,7 +24,7 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: 42Crunch REST API Static Security Testing
-        uses: 42Crunch/api-security-audit-action@v1
+        uses: 42Crunch/api-security-audit-action@sarif
         with:
           api-token: ${{ secrets.API_TOKEN }}
           collection-name: Github_Action

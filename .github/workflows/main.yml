@@ -26,7 +26,7 @@ jobs:
       - name: 42Crunch REST API Static Security Testing
         uses: 42Crunch/api-security-audit-action@sarif
         with:
-          api-token: ${{ secrets.API_TOKEN }}
+          api-token: ${{ secrets.API_TOKEN_FAKE }}
           collection-name: Github_Action
           min-score: 70
           upload-to-code-scanning: true
